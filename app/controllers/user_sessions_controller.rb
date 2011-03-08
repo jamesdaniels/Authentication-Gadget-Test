@@ -28,7 +28,6 @@ class UserSessionsController < ApplicationController
 		@user_session.user_agent = request.user_agent
 		@user_session.ip_address = request.remote_ip
 		@user_session.location = Geokit::Geocoders::MultiGeocoder.geocode(request.remote_ip).full_address
-		
 
 		if @user_session.save
 			request.session[:user_session_access_token] = @user_session.access_token

@@ -1,6 +1,6 @@
 <h1>Listing Account Activity</h1>
 
-<table>
+<table cellpadding="4">
 	<tr>
 		<th>Last Accessed</th>
 		<th>Expires</th>
@@ -23,7 +23,7 @@
 			<td colspan="2">Unknown browser</td>
 		<% end %>
 			
-		<td><%= link_to 'Revoke', user_session, :confirm => 'Are you sure?', :method => :delete %></td>
+		<td><%= link_to 'Revoke', user_session, :confirm => 'Are you sure?', :method => :delete unless user_session.expired? %></td>
 	</tr>
 <% end %>
 </table>

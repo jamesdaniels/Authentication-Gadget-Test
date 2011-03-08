@@ -42,15 +42,21 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(params[:user])
 
-		respond_to do |format|
 			if @user.save
-				format.html { redirect_to(@user, :notice => 'User was successfully created.') }
-				format.xml  { render :xml => @user, :status => :created, :location => @user }
+
+				if logged_out?
+					@current_user_session = UserSession.new(:login => params[:user][:login], :password => params[:user][:password])
+					@current_user_session.user_agent = request.user_agent
+					@current_user_session.ip_address = request.remote_ip
+					@current_user_session.location = Geokit::Geocoders::MultiGeocoder.geocode(request.remote_ip).full_address
+					@current_user_session.save!
+					request.session[:user_session_access_token] = @current_user_session.access_token
+				end
+
+				redirect_to(@user, :notice => 'User was successfully created.')
 			else
-				format.html { render :action => "new" }
-				format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+				render :action => "new"
 			end
-		end
 	end
 
 	# PUT /users/1
