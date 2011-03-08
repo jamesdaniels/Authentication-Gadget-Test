@@ -13,6 +13,8 @@ gem 'sqlite3'
 gem 'uuidtools',     '~> 2.1.2'
 gem 'state_machine', '~> 0.9.4'
 gem 'bcrypt-ruby',   '~> 2.1.4', :require => 'bcrypt'
+gem 'geokit',        '~> 1.5.0'
+gem 'useragent',     '~> 0.3.1'
 
 group :development, :test do
 	gem 'rspec-rails',     '~> 2.5.0'

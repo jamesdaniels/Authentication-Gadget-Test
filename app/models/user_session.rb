@@ -13,12 +13,18 @@ class UserSession < ActiveRecord::Base
 
 	validates :login,    :presence => true, :on => :create
 	validates :password, :presence => true, :password_match => true, :on => :create
-	validates :user,     :presence => true, :associated => true
+
+	def expired?
+		expires_at < Time.now
+	end
 
 private
 
 	def find_user
 		self.user ||= User.where(:login => login.downcase).first
+		unless self.user
+			self.errors[:login] << "can't be found"
+		end
 	end
 
 	def intialize_access_token

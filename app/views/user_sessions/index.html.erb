@@ -1,21 +1,29 @@
-<h1>Listing user_sessions</h1>
+<h1>Listing Account Activity</h1>
 
 <table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+	<tr>
+		<th>Last Accessed</th>
+		<th>Expires</th>
+		<th>Location</th>
+		<th colspan="2">Browser</th>
+		<th></th>
+	</tr>
 
 <% @user_sessions.each do |user_session| %>
-  <tr>
-    <td><%= link_to 'Show', user_session %></td>
-    <td><%= link_to 'Edit', edit_user_session_path(user_session) %></td>
-    <td><%= link_to 'Destroy', user_session, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+	<tr>
+		<td><%= time_ago_in_words(user_session.last_accessed_on) %> ago</td>
+		<td><%= 'expired ' if user_session.expired? %><%= time_ago_in_words(user_session.expires_at) %> <%= user_session.expired? ? 'ago' : 'from now' %></td>
+		<td><%= user_session.location.blank? ? 'Unknown location' : user_session.location %></td>
+		<% begin %>
+			<% UserAgent.parse(user_session.user_agent).tap do |user_agent| %>
+				<td><%= user_agent.browser %></td>
+				<td><%= user_agent.version %></td>
+			<% end %>	
+		<% rescue %>
+			<td colspan="2">Unknown browser</td>
+		<% end %>
+			
+		<td><%= link_to 'Revoke', user_session, :confirm => 'Are you sure?', :method => :delete %></td>
+	</tr>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New User session', new_user_session_path %>
